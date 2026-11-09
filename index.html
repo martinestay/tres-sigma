@@ -317,6 +317,34 @@ table.t th{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:va
 .agent .ailog{min-height:0;font-size:.82rem}
 .agent.lead{border-color:var(--ia);background:color-mix(in srgb,var(--ia) 9%,var(--panel-2))}
 .agent.lead>b{color:var(--ia)}
+/* ---------- modos creativos con IA ---------- */
+.iasays{--ia:var(--azul);display:flex;flex-direction:column;gap:8px;margin-top:12px;padding:12px;border-radius:12px;border:1px solid var(--rule);border-left:3px solid var(--ia);background:var(--panel-2)}
+.iasays p{margin:0;font-size:.92rem}.iasays .aviso{font-size:.76rem}
+.iasays .rtop b{font-size:.92rem}
+.pieza{font:inherit;color:inherit;background:color-mix(in srgb,var(--azul) 18%,transparent);border:1px dashed var(--azul);border-radius:5px;padding:0 4px}
+.pieza:hover:not(:disabled){background:color-mix(in srgb,var(--azul) 34%,transparent)}
+.pieza.ok{border:1px solid var(--verde);background:color-mix(in srgb,var(--verde) 24%,transparent)}
+.pieza.bad{border:1px solid var(--roja);background:color-mix(in srgb,var(--roja) 24%,transparent)}
+.mlist{display:flex;flex-direction:column;gap:10px}
+.mbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 8px;align-items:center;font-size:.86rem}
+.mbar .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.mbar>i{grid-column:1/2;height:7px;border-radius:4px;background:var(--rule);overflow:hidden;display:block}
+.mbar>i b{display:block;height:100%;background:var(--sol);transition:width .4s}
+.mbar>i:last-child{grid-column:1/-1}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:32px;height:32px;padding:0;border-radius:8px;border:1px solid var(--rule);background:var(--panel-2);color:var(--fg);font-size:1rem}
+.stepper button:disabled{opacity:.4}
+.stepper b{min-width:1.2em;text-align:center;font-family:var(--mono)}
+.ligaplan{display:flex;flex-direction:column;gap:10px}
+.ligaplan .rtop b{display:block;font-family:var(--display);font-weight:600}
+.ligaplan .rtop small{color:var(--muted);font-size:.8rem}
+.opt.sel{border-color:var(--sol);background:color-mix(in srgb,var(--sol) 14%,var(--panel-2))}
+.cline{--ia:var(--azul);display:flex;align-items:center;gap:10px;min-width:0}
+.cinfo{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;font-size:.84rem}
+.cinfo b{font-weight:600}
+.cresp{font-family:var(--mono);font-size:.76rem;color:var(--muted);overflow-wrap:anywhere}
+.cresp.ok{color:var(--verde)}.cresp.bad{color:var(--roja)}
+.ccons{flex:none;padding:7px 10px;font-size:.78rem}
 .aians:empty{display:none}
 .aians{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--rule);padding-top:10px}
 .aiansv{font-family:var(--mono);font-size:.86rem;white-space:pre-wrap;border-radius:8px;padding:8px 10px;background:var(--panel-2);border:1.5px solid var(--rule);overflow-wrap:anywhere}
@@ -350,6 +378,7 @@ table.t th{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:va
   .iascore .who b{font-size:1.3rem}
   .hud{grid-template-columns:1fr auto;grid-template-areas:"who stats" "timer timer"}
   .hud .who{grid-area:who}.hud .stats{grid-area:stats}.hud .tw{grid-area:timer}
+  .hud .stats{flex-wrap:wrap;justify-content:flex-end;max-width:170px}
   .stats{gap:10px}
   .heart{width:22px;height:22px}
   .opts{grid-template-columns:1fr}
@@ -2218,12 +2247,18 @@ const ICONS = {
 };
 
 ICONS.ia = '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="8" width="16" height="16" rx="3"/><path d="M13 13h6v6h-6zM12 3v5M20 3v5M12 24v5M20 24v5M3 12h5M3 20h5M24 12h5M24 20h5"/></svg>';
+ICONS.caza = '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13" cy="13" r="9"/><path d="M20 20l8 8M10 10l6 6M16 10l-6 6"/></svg>';
+ICONS.entrena = '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4L3 11l13 7 13-7z"/><path d="M3 17l13 7 13-7M3 23l13 7 13-7"/></svg>';
+ICONS.consejo = '<svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4v24M9 28h14M5 9h22M5 9l-3 9c0 2 2 3 4 3s4-1 4-3zM27 9l-3 9c0 2 2 3 4 3s4-1 4-3z" transform="translate(-.5)"/></svg>';
 const MODES = [
   { id: 'reloj', name: 'Completar código', ico: 'clock', desc: 'Llena los espacios del código antes de que termine el tiempo. Cada 3 aciertos el reloj se acorta.', tags: [['Contra reloj'], ['Individual']] },
   { id: 'grupo', name: 'Completar código en grupo', ico: 'team', desc: 'Turnos con reloj y vidas compartidas. Cada acierto suma 8 segundos al reloj del grupo.', tags: [['Contra reloj'], ['Grupo']] },
   { id: 'lab', name: 'Depurar gráficos', ico: 'chart', desc: 'El código se ejecuta línea a línea y la figura se construye en vivo. Encuentra la línea con el error y corrígela.', tags: [['Matplotlib'], ['Individual']] },
   { id: 'duelo', name: 'Duelo', ico: 'vs', desc: 'Dos jugadores o dos equipos en el mismo teclado. Suma el punto quien acierta primero.', tags: [['1 contra 1'], ['Equipos']] },
   { id: 'ia', name: 'Contra la IA', ico: 'ia', desc: 'Compite contra cuatro rivales simulados con distintas formas de razonar y dificultad: Gemini Argón, GPT 6 Astra, Fable 5.1 y Grok Heavy, con 3 agentes que votan.', tags: [['Tú contra la IA'], ['4 niveles']] },
+  { id: 'caza', name: 'Caza alucinaciones', ico: 'caza', desc: 'Una IA responde con total seguridad, pero a veces inventa. Decide si tiene razón o encuentra la función que no existe. Cada rival alucina con distinta frecuencia.', tags: [['IA'], ['Contra reloj']] },
+  { id: 'entrena', name: 'Entrena tu modelo', ico: 'entrena', desc: 'Tus respuestas son el dataset: si aciertas, tu modelo aprende; si fallas, lo contaminas. Después compite solo en una liga contra los cuatro rivales.', tags: [['IA'], ['Estrategia']] },
+  { id: 'consejo', name: 'Consejo de IAs', ico: 'consejo', desc: 'Gasta tus tokens en consultar a las IAs que te den confianza y apuesta qué tan seguro estás. Al final ves si tu confianza coincide con tus aciertos.', tags: [['IA'], ['Calibración']] },
   { id: 'oraculo', name: 'Predecir la salida', ico: 'eye', desc: 'Lee el código y anticipa el resultado sin ejecutarlo.', tags: [['Contra reloj'], ['Individual']] },
   { id: 'orden', name: 'Ordenar el programa', ico: 'list', desc: 'Las líneas llegan desordenadas. Ordénalas para que el programa funcione; se acepta cualquier orden válido.', tags: [['Individual']] },
   { id: 'terminal', name: 'Comandos de terminal', ico: 'term', desc: 'Escribe el comando de Unix, conda o Git que corresponde a cada tarea.', tags: [['Contra reloj'], ['Unix · Git']] },
@@ -2273,6 +2308,7 @@ function renderHome() {
     if (m.id === 'simulacro') { const r = store.get('rec.simulacro', null); if (r) recTxt = `Mejor nota: ${r.toFixed(1).replace('.', ',')}`; }
     else if (m.id === 'duelo') { const r = store.get('rec.duelo', null); if (r) recTxt = `Último: ${r}`; }
     else if (m.id === 'ia') { const H = Object.values(store.get('ia.hist', {})); if (H.length) { const g = H.reduce((a, v) => a + v.g, 0), p = H.reduce((a, v) => a + v.p, 0); recTxt = `Ganadas: ${g} · perdidas: ${p}`; } }
+    else if (m.id === 'entrena' || m.id === 'consejo') { const r = store.get('rec.' + m.id, null); if (r != null) recTxt = `Récord: ${r} pts`; }
     else if (recs.length) { const [o, r] = recs.reduce((a, b) => b[1] > a[1] ? b : a); recTxt = `Récord: ${r} pts · ${o.name.toLowerCase()}`; }
     grid.append(h('button', { class: 'mode', type: 'button', onclick: () => { Snd.init(); openSetup(m); } },
       h('span', { class: 'ico', html: ICONS[m.ico] }),
@@ -2302,7 +2338,7 @@ function openSetup(m) {
   const box = $('#setup'); box.innerHTML = '';
   const card = h('div', { class: 'setup' }, h('div', {}, h('div', { class: 'label' }, 'Modo'), h('h2', {}, m.name), h('p', { class: 'desc' }, m.desc)));
   let lp = null, extra = {};
-  if (!['simulacro', 'ia'].includes(m.id)) { lp = lifePicker(); card.append(h('div', { class: 'label' }, m.id === 'duelo' ? 'Vidas de cada lado' : (m.id === 'grupo' ? 'Vidas del equipo' : 'Vidas')), lp.el); }
+  if (!['simulacro', 'ia', 'entrena', 'consejo'].includes(m.id)) { lp = lifePicker(); card.append(h('div', { class: 'label' }, m.id === 'duelo' ? 'Vidas de cada lado' : (m.id === 'grupo' ? 'Vidas del equipo' : 'Vidas')), lp.el); }
   if (['reloj', 'grupo'].includes(m.id)) {
     const cb = h('input', { type: 'checkbox', id: 'bankChk' }); cb.checked = store.get('bank', true);
     cb.onchange = () => store.set('bank', cb.checked);
@@ -2381,6 +2417,30 @@ function openSetup(m) {
       h('p', { class: 'aviso' }, AVISO_IA));
     extra.ia = () => ({ rival: sel, rounds: rondas, bank: cb.checked });
   }
+  if (m.id === 'caza') card.append(h('p', { class: 'desc', style: 'margin:0' }, 'Detectar una alucinación da más puntos que confirmar una respuesta correcta, pero acusar sin razón cuesta una vida. La seguridad con la que habla la IA no te dirá nada.'), h('p', { class: 'aviso' }, AVISO_IA));
+  if (m.id === 'entrena') {
+    let temas = store.get('liga.temas', ['np', 'plt', 'pd', 'fn']).filter(t => t in TOPICS).slice(0, 4);
+    const nom = h('input', { id: 'ligaNom', maxlength: '18', autocomplete: 'off', placeholder: 'Mi modelo' }); nom.value = store.get('liga.nombre', '');
+    const chips = Object.keys(TOPICS).map(t => h('button', { class: 'chip', type: 'button', 'aria-pressed': String(temas.includes(t)), onclick: e => {
+      if (temas.includes(t)) temas = temas.filter(x => x !== t); else if (temas.length < 4) temas = [...temas, t]; else return toast('Ya elegiste 4 temas', true);
+      e.currentTarget.setAttribute('aria-pressed', String(temas.includes(t)));
+    } }, h('span', { class: 'dot' }), TOPICS[t]));
+    card.append(h('label', { class: 'field', for: 'ligaNom' }, h('span', { class: 'label' }, 'Nombre de tu modelo'), nom),
+      h('div', { class: 'label' }, 'Especialidad: elige 4 temas'), h('div', { class: 'chips', style: 'display:flex;flex-wrap:wrap;gap:8px' }, chips),
+      h('p', { class: 'desc', style: 'margin:0' }, 'Antes de cada partido repartes 8 lotes de entrenamiento entre tus temas. Tu modelo juega solo, al mejor de 7, y tienes 2 revanchas en toda la liga.'),
+      h('p', { class: 'aviso' }, AVISO_IA));
+    extra.liga = () => { const nombre = nom.value.trim() || 'Mi modelo'; store.set('liga.nombre', nom.value.trim()); store.set('liga.temas', temas); return { temas, nombre }; };
+  }
+  if (m.id === 'consejo') {
+    let rondas = store.get('consejo.rounds', 10);
+    const seg = h('div', { class: 'seg', role: 'group', 'aria-label': 'Rondas' });
+    const rb = [10, 15].map(n => h('button', { type: 'button', 'aria-pressed': String(n === rondas), onclick: () => { rondas = n; store.set('consejo.rounds', n); rb.forEach((b, i) => b.setAttribute('aria-pressed', String([10, 15][i] === n))); } }, `${n} rondas`));
+    seg.append(...rb);
+    card.append(h('div', { class: 'label' }, 'Formato'), seg,
+      h('p', { class: 'desc', style: 'margin:0' }, 'Tienes 100 tokens para toda la partida: Gemini Argón cuesta 4, GPT 6 Astra 8, Fable 5.1 15 y Grok Heavy 30. Los que no gastes se convierten en puntos. Decir 100 % y fallar sale muy caro: conviene decir la confianza real.'),
+      h('p', { class: 'aviso' }, AVISO_IA));
+    extra.consejo = () => ({ rounds: rondas });
+  }
   card.append(h('div', { class: 'actions' },
     h('button', { class: 'btn alt', type: 'button', onclick: () => { show('home'); } }, 'Volver'),
     h('button', { class: 'btn', type: 'button', id: 'startBtn', onclick: () => {
@@ -2389,6 +2449,8 @@ function openSetup(m) {
       if (extra.players) { cfg.players = extra.players(); cfg.time = extra.time(); if (!cfg.players.length) { toast('Escribe al menos un nombre', true); $('#grpNames').focus(); return; } }
       if (extra.duel) Object.assign(cfg, extra.duel());
       if (extra.ia) Object.assign(cfg, extra.ia());
+      if (extra.consejo) Object.assign(cfg, extra.consejo());
+      if (extra.liga) { const c = extra.liga(); if (c.temas.length !== 4) { toast('Elige exactamente 4 temas', true); return; } Object.assign(cfg, c); }
       start(m, cfg);
     } }, 'Jugar')));
   box.append(card); show('setup');
@@ -2399,7 +2461,7 @@ function start(m, cfg) {
   Game.reset(); Game.mode = m; Game.cfg = cfg;
   $('#stage').innerHTML = ''; restoreHud(); show('game');
   Game.lives = cfg.lives ? new LifeBar($('#hudLives'), cfg.lives) : null;
-  ({ reloj: Solo, oraculo: Solo, orden: Solo, terminal: Solo, grupo: Group, lab: Lab, duelo: Duel, simulacro: Exam, ia: VsIA })[m.id].start(m, cfg);
+  ({ reloj: Solo, oraculo: Solo, orden: Solo, terminal: Solo, grupo: Group, lab: Lab, duelo: Duel, simulacro: Exam, ia: VsIA, caza: Caza, entrena: Liga, consejo: Consejo })[m.id].start(m, cfg);
 }
 
 /* ---------- Modos individuales (Contrarreloj, ¿Qué imprime?, Ordena, Terminal) ---------- */
@@ -2936,6 +2998,354 @@ const VsIA = {
   }
 };
 
+/* ---------- Modos creativos con IA: Caza alucinaciones, Entrena tu modelo, Consejo de IAs ---------- */
+const escH = s => String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+const conSigno = x => String(x).replace('-', '−');
+const cualquiera = a => a[Math.floor(Math.random() * a.length)];
+const pct = x => Math.round(100 * x) + ' %';
+// Nombres que suenan bien pero no existen: se comprobó con NumPy, pandas y Matplotlib reales.
+const INVENTOS = {
+  array: 'make_array', linspace: 'lin_space', default_rng: 'create_rng', normal: 'gaussian', argmax: 'max_index', argsort: 'sort_indices',
+  'where|nonzero': 'find_true', mean: 'avg', std: 'stdev', sqrt: 'square_root', 'deg2rad|radians': 'to_radians', 'ravel|flatten': 'to_1d',
+  'stack|vstack': 'stack_up', isnan: 'is_nan', nan_to_num: 'nan_to_zero', ones_like: 'ones_as', uniform: 'random_uniform', meshgrid: 'mesh_grid',
+  exp: 'exponent', median: 'median_value', items: 'pairs', DataFrame: 'Dataframe', head: 'top', describe: 'summary', iloc: 'iloc_at', loc: 'label_at',
+  isin: 'is_in', apply: 'apply_all', dropna: 'drop_na', fillna: 'fill_na', value_counts: 'count_values', where: 'if_else', groupby: 'groupBy',
+  read_csv: 'load_csv', dump: 'serialize', save: 'save_array', load: 'load_array', savez_compressed: 'save_compressed', savefig: 'save_figure',
+  read_text: 'read_all', splitlines: 'split_lines', DictWriter: 'DictionaryWriter', writeheader: 'write_header', allclose: 'all_close', hist: 'histplot',
+  axhline: 'hline', axvline: 'vline', yscale: 'ylog', xscale: 'xlog', invert_xaxis: 'flip_xaxis', invert_yaxis: 'flip_yaxis', subplots: 'create_axes',
+  imshow: 'show_image', colorbar: 'color_bar', scatter: 'scatterplot', legend: 'add_legend', text: 'add_label', append: 'push', get: 'fetch',
+  arange: 'arrange', zeros: 'zero', abs: 'absolute_value', power: 'raise_to', errorbar: 'error_bars', xlim: 'x_limit', ylim: 'y_limit', set_xlabel: 'set_x_label',
+  fill_between: 'shade_between', tight_layout: 'compact_layout', copy: 'duplicate', broadcast_arrays: 'broadcast_all', shares_memory: 'same_memory',
+  percentile: 'percent', quantile: 'quantiles', isclose: 'is_close', log10: 'log_10', cut: 'bin_cut', agg: 'aggregate_by', nlargest: 'top_n',
+  reset_index: 'clear_index', to_numpy: 'to_ndarray', itertuples: 'iter_tuples', isna: 'is_na', files: 'list_files', mgrid: 'm_grid', ogrid: 'o_grid',
+  sum: 'total', contour: 'contour_lines', clabel: 'contour_label', contourf: 'filled_contour', set: 'configure', rcParams: 'style_params', set_aspect: 'aspect_ratio',
+  split: 'tokens', join: 'join_all', strip: 'trim', diff: 'deltas', cumsum: 'cum_sum', nanmean: 'mean_nan', sort: 'sorted', clip: 'clamp', solve: 'solve_system',
+  polyfit: 'poly_fit', histogram: 'histo', 'sum|count_nonzero': 'count_true', concatenate: 'join_arrays', choice: 'select_one', annotate: 'add_note', twinx: 'twin_x',
+  axvspan: 'vspan', close: 'close_all', suptitle: 'main_title', query: 'filter_rows', merge: 'join_tables', rename: 'rename_columns', drop: 'delete_rows',
+  nunique: 'n_unique', set_index: 'use_index', drop_duplicates: 'remove_duplicates', idxmax: 'index_max', hypot: 'hypotenuse', log: 'ln', unravel_index: 'unflatten_index',
+  loadtxt: 'load_txt', glob: 'find_files', exists: 'is_present', stem: 'name_no_ext', suffix: 'extension',
+};
+// Índices de los espacios que se pueden reemplazar por una función inventada.
+function piezasInventables(q) {
+  const out = []; let i = 0;
+  q.c.replace(/(\.)?⟦([^⟧]+)⟧/g, (m, dot, a) => { if (dot && INVENTOS[a]) out.push(i); i++; return m; });
+  return out;
+}
+const dichoIA = (r, conf, ...cuerpo) => h('div', { class: 'iasays', style: `--ia:${r.color}` },
+  h('div', { class: 'rtop' }, h('span', { class: 'mono-av' }, r.ini), h('div', {}, h('b', {}, rivalName(r)), h('small', {}, `Confianza declarada: ${conf} %`))),
+  ...cuerpo, h('p', { class: 'aviso' }, 'Simulado: no es el modelo real.'));
+
+const TASA_ALUCINA = { gemini: .6, astra: .55, fable: .4, grok: .3 };
+const LETANIA = ['Es el comportamiento documentado.', 'Se deduce directamente del enunciado.', 'Lo comprobé mentalmente dos veces.', 'Es un resultado estándar del curso.', 'No hay ninguna duda posible.', 'Revisé los casos borde y se mantiene.'];
+
+const Caza = {
+  tok: 0,
+  start(m, cfg) {
+    this.m = m; this.cfg = cfg; this.n = 0; this.tok++;
+    this.cm = { tp: 0, fp: 0, fn: 0, tn: 0 };
+    this.mcq = deck(MCQ); this.fill = deck(FILL.filter(q => piezasInventables(q).length));
+    setHud(m.name, 'Caso 1');
+    this.next();
+  },
+  next() {
+    const stage = $('#stage'); stage.innerHTML = ''; this.n++;
+    $('#hudSub').textContent = `Caso ${this.n}`;
+    const r = cualquiera(RIVALS), kind = Math.random() < .5 ? 'mcq' : 'code';
+    const q = kind === 'mcq' ? this.mcq() : this.fill();
+    const alucina = !(r.id === 'grok' && esFisica(q)) && Math.random() < TASA_ALUCINA[r.id];
+    const conf = Math.round(rnd(80, 99));   // la confianza no delata nada: alucinar y acertar se dicen igual de seguro
+    const total = Math.max(18, (kind === 'mcq' ? 32 : 38) - Game.ok);
+    (kind === 'mcq' ? this.casoMCQ : this.casoCodigo).call(this, stage, q, r, alucina, conf, total);
+  },
+  // Cierra un caso: anota la matriz de confusión, los puntos y muestra la explicación.
+  fallo(q, card, { ok, alucina, marco, total, extra = 0, title, ex, answer, ya }) {
+    if (!ya) {
+      Timer.pause(); track(q, ok);
+      if (alucina) this.cm[ok ? 'tp' : 'fn']++; else if (marco) this.cm.fp++; else if (ok) this.cm.tn++;
+      if (ok) Game.right(alucina ? 130 : 100, Timer.left / total); else Game.wrong();
+    }
+    if (extra) { Game.score += extra; Game.hud(); toast('+' + extra); }
+    const vivo = !Game.lives || Game.lives.alive;
+    feedback(card, { ok, title, ex, answer, showAnswer: !!answer, next: vivo ? () => this.next() : () => this.end(), nextLabel: vivo ? 'Siguiente caso' : 'Ver resultado' });
+  },
+  casoMCQ(stage, q, r, alucina, conf, total) {
+    const dicha = alucina ? q.o[1 + Math.floor(Math.random() * 3)] : q.o[0];
+    const card = h('div', { class: 'card' }, h('div', { class: 'prompt' }, h('h3', {}, q.q), h('span', { class: 'topicpill' }, TOPICS[q.t])));
+    if (q.c) card.append(h('div', { class: 'code', html: hl(q.c) }));
+    card.append(dichoIA(r, conf, h('div', { class: 'aiansv' }, dicha), h('p', {}, cualquiera(LETANIA))));
+    let done = false;
+    const si = h('button', { class: 'btn alt', type: 'button', onclick: () => juzga(false) }, 'Es correcta ', h('kbd', {}, '1'));
+    const no = h('button', { class: 'btn', type: 'button', onclick: () => juzga(true) }, 'Alucinó ', h('kbd', {}, '2'));
+    const fila = h('div', { class: 'row' }, si, no); card.append(fila); stage.append(card);
+    const juzga = (dijoAlucina, timeout) => {
+      if (done) return; done = true; si.disabled = no.disabled = true; Game.onKeys(() => {});
+      const ok = !timeout && dijoAlucina === alucina;
+      const cierre = { alucina, marco: dijoAlucina, total };
+      if (ok && alucina) {
+        Timer.pause(); track(q, true); this.cm.tp++; Game.right(130, Timer.left / total);
+        const box = h('div', { class: 'opts' }), resto = shuffle(q.o.filter(o => o !== dicha));
+        card.append(h('p', { class: 'label', style: 'margin:12px 0 6px' }, 'Bonus: ¿cuál era la correcta? (+50)'), box);
+        resto.forEach((o, k) => box.append(h('button', { class: 'opt', type: 'button', onclick: () => {
+          $$('button', box).forEach((b, j) => { b.disabled = true; if (resto[j] === q.o[0]) b.classList.add('ok'); });
+          if (o !== q.o[0]) box.children[k].classList.add('bad');
+          this.fallo(q, card, { ...cierre, ok: true, ya: true, extra: o === q.o[0] ? 50 : 0, title: 'Alucinación detectada', ex: q.ex });
+        } }, h('span', {}, o))));
+        return;
+      }
+      this.fallo(q, card, { ...cierre, ok, title: ok ? 'Bien: esta vez tenía razón' : timeout ? 'Se acabó el tiempo' : alucina ? 'Se te pasó la alucinación' : 'Falsa alarma: la IA tenía razón', ex: q.ex, answer: ok ? null : q.o[0] });
+    };
+    Game.onKeys(e => { if (e.key === '1') juzga(false); if (e.key === '2') juzga(true); });
+    Timer.start(total, () => juzga(false, true));
+  },
+  casoCodigo(stage, q, r, alucina, conf, total) {
+    const { marked, answers } = parseFill(q.c);
+    const fake = alucina ? cualquiera(piezasInventables(q)) : -1;
+    const texto = i => i === fake ? INVENTOS[q.c.match(/⟦[^⟧]+⟧/g)[i].slice(1, -1)] : answers[i][0];
+    const html = hl(marked).replace(/\u0001(\d+)\u0001/g, (_, i) => `<button type="button" class="pieza" data-i="${i}">${escH(texto(+i))}</button>`);
+    const card = h('div', { class: 'card' }, h('div', { class: 'prompt' }, h('h3', {}, q.q), h('span', { class: 'topicpill' }, TOPICS[q.t])),
+      dichoIA(r, conf, h('p', {}, 'Aquí tienes el código completo. ' + cualquiera(LETANIA))), h('div', { class: 'code', html }));
+    const piezas = $$('.pieza', card);
+    let done = false;
+    const todo = h('button', { class: 'btn alt', type: 'button', onclick: () => juzga(null) }, 'Todo existe');
+    card.append(h('p', { class: 'label', style: 'margin:10px 0 0' }, '¿Alguna pieza resaltada no existe? Tócala.'), h('div', { class: 'row', style: 'margin-top:6px' }, todo));
+    stage.append(card); Game.onKeys(() => {});
+    const juzga = (v, timeout) => {
+      if (done) return; done = true; todo.disabled = true; piezas.forEach(p => p.disabled = true);
+      const ok = !timeout && (alucina ? v === fake : v === null);
+      if (alucina) piezas[fake].classList.add(ok ? 'ok' : 'bad');
+      if (v != null && v !== fake) piezas[v].classList.add('bad');
+      const real = fake >= 0 ? answers[fake][0] : '';
+      const ex = (alucina ? `La IA inventó <code>${escH(texto(fake))}</code>, que no existe. Lo correcto es <code>${escH(real)}</code>. ` : 'Todas las piezas existen y el código es correcto. ') + q.ex;
+      this.fallo(q, card, { ok, alucina, marco: v != null, total, title: ok ? (alucina ? 'Alucinación detectada' : 'Bien: todo existía') : timeout ? 'Se acabó el tiempo' : alucina ? (v == null ? 'Se te pasó la función inventada' : 'Esa pieza sí existe') : 'Falsa alarma: esa pieza existe', ex });
+    };
+    piezas.forEach(p => p.onclick = () => juzga(+p.dataset.i));
+    Timer.start(total, () => juzga(null, true));
+  },
+  end() {
+    const c = this.cm, prec = c.tp + c.fp ? pct(c.tp / (c.tp + c.fp)) : '—', rec = c.tp + c.fn ? pct(c.tp / (c.tp + c.fn)) : '—';
+    endSolo([kpi('Detectadas', `${c.tp}/${c.tp + c.fn}`), kpi('Falsas alarmas', c.fp), kpi('Precisión', prec), kpi('Exhaustividad', rec)]);
+    const acciones = $('#end .actions');
+    acciones.before(h('p', { class: 'aviso' }, 'Precisión: de las veces que acusaste a la IA, cuántas tenías razón. Exhaustividad: de todas sus alucinaciones, cuántas pillaste. ' + AVISO_IA));
+  },
+};
+
+/* ---------- Entrena tu modelo: tus respuestas son el dataset ---------- */
+const barraTema = (t, a, extra) => h('div', { class: 'mbar' }, h('span', {}, TOPICS[t]), h('span', { class: 'mono' }, pct(a)), h('i', {}, h('b', { style: `width:${Math.round(100 * a)}%` })), extra || null);
+const Liga = {
+  tok: 0,
+  start(m, cfg) {
+    this.m = m; this.cfg = cfg; this.tok++; this.temas = cfg.temas; this.nombre = cfg.nombre;
+    this.a = Object.fromEntries(cfg.temas.map(t => [t, .3]));
+    this.stage = 0; this.revanchas = 2; this.limpios = 0; this.sucios = 0; this.vencidos = 0;
+    const baraja = (pool, t) => { const src = pool.filter(q => q.t === t); let c = []; return () => { if (!src.length) return null; if (!c.length) c = shuffle(src); return c.pop(); }; };
+    this.mazos = Object.fromEntries(cfg.temas.map(t => [t, { mcq: baraja(MCQ, t), fill: baraja(FILL, t) }]));
+    setHud(m.name, '', { lives: false });
+    this.plan();
+  },
+  saca(t) {
+    const d = this.mazos[t]; let kind = Math.random() < .6 ? 'mcq' : 'fill';
+    let q = d[kind](); if (!q) { kind = kind === 'mcq' ? 'fill' : 'mcq'; q = d[kind](); }
+    return { q, kind };
+  },
+  rotulo() { $('#hudSub').textContent = `${this.nombre} · rival ${this.stage + 1} de 4 · revanchas: ${this.revanchas}`; },
+  plan() {
+    Timer.none('sin reloj'); Game.onKeys(() => {}); this.rotulo();
+    const stage = $('#stage'); stage.innerHTML = '';
+    const r = RIVALS[this.stage], lotes = Object.fromEntries(this.temas.map(t => [t, 2])), TOTAL = 8;
+    const libres = () => TOTAL - Object.values(lotes).reduce((a, b) => a + b, 0);
+    const lista = h('div', { class: 'mlist' }), aviso = h('small', { style: 'color:var(--muted)' });
+    const go = h('button', { class: 'btn', type: 'button', onclick: () => this.entrena(lotes) }, 'Empezar entrenamiento');
+    const pinta = () => {
+      lista.innerHTML = '';
+      this.temas.forEach(t => lista.append(barraTema(t, this.a[t], h('div', { class: 'stepper' },
+        h('button', { type: 'button', class: 'ghost', disabled: lotes[t] === 0, 'aria-label': `Quitar lote de ${TOPICS[t]}`, onclick: () => { lotes[t]--; pinta(); } }, '−'),
+        h('b', {}, lotes[t]),
+        h('button', { type: 'button', class: 'ghost', disabled: libres() === 0, 'aria-label': `Agregar lote a ${TOPICS[t]}`, onclick: () => { lotes[t]++; pinta(); } }, '+')))));
+      aviso.textContent = libres() ? `Te quedan ${libres()} lotes por repartir.` : 'Cada lote es una pregunta. Si la aciertas, el modelo aprende; si fallas, le enseñas un dato contaminado.';
+      go.disabled = libres() !== 0;
+    };
+    pinta();
+    stage.append(h('div', { class: 'card ligaplan', style: `--ia:${r.color}` },
+      h('div', { class: 'label' }, `Próximo rival · ${this.stage + 1} de 4`),
+      h('div', { class: 'rtop' }, h('span', { class: 'mono-av' }, r.ini), h('div', {}, h('b', {}, rivalName(r)), h('small', {}, `${r.nivelTxt} · ${r.estilo}`))),
+      h('div', { class: 'label', style: 'margin-top:8px' }, `Precisión de ${this.nombre} y lotes de entrenamiento`), lista, aviso,
+      h('div', { class: 'row' }, h('span', { class: 'grow' }), go),
+      h('p', { class: 'aviso' }, 'Rival simulado: no es el modelo real.')));
+  },
+  entrena(lotes) {
+    this.cola = shuffle(Object.entries(lotes).flatMap(([t, n]) => Array(n).fill(t)));
+    this.total = this.cola.length;
+    this.paso();
+  },
+  panel() {
+    const n = this.total - this.cola.length;
+    return [h('div', { class: 'aihead' }, h('div', {}, h('b', {}, this.nombre), h('small', {}, `Lote ${n} de ${this.total}`))),
+      h('div', { class: 'mlist' }, this.temas.map(t => barraTema(t, this.a[t]))),
+      h('div', { class: 'aistat ready' }, `Datos limpios: ${this.limpios} · contaminados: ${this.sucios}`)];
+  },
+  paso() {
+    const t = this.cola.pop(), { q, kind } = this.saca(t);
+    this.rotulo();
+    const stage = $('#stage'); stage.innerHTML = '';
+    const left = h('div', { class: 'iaq' }), panel = h('aside', { class: 'card aipanel', style: 'gap:12px', 'aria-label': 'Tu modelo' }, this.panel());
+    stage.append(h('div', { class: 'vsia' }, left, panel));
+    const total = kind === 'mcq' ? 40 : 60;
+    let rr;
+    const done = res => {
+      Timer.pause(); Game.onKeys(() => {}); track(q, res.ok);
+      const antes = this.a[t];
+      if (res.ok) { Game.right(100, Timer.left / total, res.partial); this.limpios++; this.a[t] += (.98 - antes) * (res.partial ? .16 : .32); }
+      else { Game.wrong(); this.sucios++; this.a[t] = Math.max(.1, antes - .07); }
+      panel.replaceChildren(...this.panel());
+      const mas = this.cola.length > 0;
+      feedback(res.card, { ok: res.ok, title: res.ok ? `Dato limpio: ${TOPICS[t]} sube a ${pct(this.a[t])}` : `Dato contaminado: ${TOPICS[t]} baja a ${pct(this.a[t])}`, ex: res.ex, answer: res.answer, showAnswer: kind === 'mcq', next: mas ? () => this.paso() : () => this.partido(), nextLabel: mas ? 'Siguiente lote' : 'Ir al partido' });
+    };
+    if (kind === 'mcq') { rr = renderMCQ(left, q, { onDone: done }); Game.onKeys(e => { if (/^[1-4]$/.test(e.key)) rr.keys(+e.key - 1); }); }
+    else rr = renderFill(left, q, { bank: true, onDone: done });
+    Timer.start(total, () => rr.check(true));
+  },
+  partido() {
+    Timer.none('partido'); Game.onKeys(() => {});
+    const tok = ++this.tok, r = RIVALS[this.stage], stage = $('#stage'); stage.innerHTML = '';
+    let me = 0, ai = 0, n = 0; const fallos = {};
+    const a = h('b', {}, '0'), b = h('b', {}, '0'), medio = h('span', {}, 'Mejor de 7');
+    const filas = h('tbody', {}), cierre = h('div', {});
+    stage.append(h('div', { class: 'iascore', style: `--ia:${r.color}` },
+      h('div', { class: 'who me' }, h('small', {}, this.nombre), a), h('div', { class: 'mid' }, h('small', {}, 'Partido'), medio), h('div', { class: 'who ai' }, h('small', {}, r.name), b)),
+      h('div', { class: 'card' }, h('div', { class: 'tablewrap' }, h('table', { class: 't' }, h('thead', {}, h('tr', {}, h('th', {}, '#'), h('th', {}, 'Tema'), h('th', {}, this.nombre), h('th', {}, r.name))), filas)), cierre));
+    const paso = () => {
+      if (tok !== this.tok) return;
+      n++;
+      const t = cualquiera(this.temas), { q, kind } = this.saca(t);
+      VsIA.r = r; const p = VsIA.plan(q, kind, 60), mio = Math.random() < this.a[t];
+      me += mio; ai += p.ok; if (!mio) fallos[t] = (fallos[t] || 0) + 1;
+      a.textContent = me; b.textContent = ai; if (n > 7) medio.textContent = 'Desempate';
+      filas.append(h('tr', {}, h('td', {}, n), h('td', {}, TOPICS[t]), h('td', { style: `color:var(--${mio ? 'verde' : 'roja'})` }, mio ? '✓' : '✗'), h('td', { style: `color:var(--${p.ok ? 'verde' : 'roja'})` }, p.ok ? '✓' : '✗')));
+      mio ? Snd.ok() : Snd.bad();
+      if ((n >= 7 && me !== ai) || n >= 12) this.fin(r, me >= ai, me, ai, fallos, cierre); else setTimeout(paso, 700);
+    };
+    setTimeout(paso, 500);
+  },
+  fin(r, gano, me, ai, fallos, cierre) {
+    const peor = Object.entries(fallos).sort((x, y) => y[1] - x[1])[0];
+    const nota = peor ? `Donde más falló: ${TOPICS[peor[0]]} (${peor[1]}).` : 'No falló ni una.';
+    let boton;
+    if (gano) {
+      this.vencidos++; Game.score += 500 * (this.stage + 1); Game.hud(); Snd.win();
+      const ultimo = this.stage === 3;
+      boton = h('button', { class: 'btn', type: 'button', onclick: () => { if (ultimo) this.end(); else { this.stage++; this.plan(); } } }, ultimo ? 'Ver resultado' : 'Siguiente rival');
+    } else {
+      Snd.over();
+      boton = this.revanchas > 0 ? h('button', { class: 'btn', type: 'button', onclick: () => { this.revanchas--; this.plan(); } }, `Reentrenar y pedir revancha (quedan ${this.revanchas})`)
+        : h('button', { class: 'btn', type: 'button', onclick: () => this.end() }, 'Ver resultado');
+    }
+    cierre.append(h('div', { class: 'fb ' + (gano ? 'ok' : 'bad') }, h('b', {}, gano ? `${this.nombre} le ganó a ${r.name}, ${me} a ${ai}` : `${r.name} le ganó a ${this.nombre}, ${ai} a ${me}`), h('p', {}, nota), h('div', { class: 'row', style: 'margin-top:4px' }, boton)));
+    setTimeout(() => boton.focus({ preventScroll: true }), 50);
+  },
+  end() {
+    this.tok++; Timer.stop(); Game.onKeys(() => {});
+    const prev = store.get('rec.entrena', 0), esRec = Game.score > prev; if (esRec) store.set('rec.entrena', Game.score);
+    const campeon = this.vencidos === 4, total = this.limpios + this.sucios;
+    campeon ? Snd.win() : Snd.over();
+    const end = $('#end'); end.innerHTML = '';
+    end.append(h('div', { class: 'end' },
+      h('div', { class: 'label' }, `Entrena tu modelo · ${this.nombre}`),
+      h('div', { class: 'big' }, campeon ? 'Campeón de la liga' : this.vencidos ? `${this.vencidos} de 4 rivales vencidos` : 'Sin victorias'),
+      esRec ? h('div', {}, h('span', { class: 'newrec' }, `Nuevo récord: ${Game.score} puntos`)) : h('div', { class: 'sub' }, `${Game.score} puntos · récord: ${prev}`),
+      h('div', { class: 'grid3' }, kpi('Datos limpios', this.limpios), kpi('Contaminados', this.sucios), kpi('Calidad del dataset', total ? pct(this.limpios / total) : '—')),
+      h('div', { class: 'card mlist' }, this.temas.map(t => barraTema(t, this.a[t]))),
+      reviewBlock(), h('p', { class: 'aviso' }, AVISO_IA), endActions(this.m, this.cfg)));
+    Game.cleanups.forEach(f => f()); Game.cleanups = [];
+    show('end');
+  },
+};
+
+/* ---------- Consejo de IAs: consultar cuesta tokens y la confianza se paga ---------- */
+const PRECIO_IA = { gemini: 4, astra: 8, fable: 15, grok: 30 };
+const NIVELES_CONF = [50, 70, 90, 100];
+// Regla de puntaje cuadrática (Brier): decir la verdad sobre tu confianza es lo que más conviene.
+const puntajeConf = (p, ok) => Math.round(100 * (1 - 2 * ((ok ? 1 : 0) - p / 100) ** 2) - 50);
+const Consejo = {
+  tok: 0,
+  start(m, cfg) {
+    this.m = m; this.cfg = cfg; this.tok++; this.tokens = 100; this.i = 0; this.hist = [];
+    this.stats = Object.fromEntries(RIVALS.map(r => [r.id, { ok: 0, cons: 0 }]));
+    this.cal = Object.fromEntries(NIVELES_CONF.map(n => [n, [0, 0]]));
+    this.mcq = deck(MCQ);
+    setHud(m.name, '', { lives: false });
+    this.next();
+  },
+  next() {
+    const tok = ++this.tok; this.i++;
+    const q = this.mcq(), total = 50;
+    const planes = RIVALS.map(r => { VsIA.r = r; return VsIA.plan(q, 'mcq', 45); });
+    $('#hudSub').textContent = `Ronda ${this.i} de ${this.cfg.rounds}`;
+    const stage = $('#stage'); stage.innerHTML = '';
+    const order = shuffle(q.o.map((_, i) => i));
+    const card = h('div', { class: 'card' }, h('div', { class: 'prompt' }, h('h3', {}, q.q), h('span', { class: 'topicpill' }, TOPICS[q.t])));
+    if (q.c) card.append(h('div', { class: 'code', html: hl(q.c) }));
+    let sel = null, done = false;
+    const elige = k => { if (done) return; sel = k; btns.forEach((b, j) => b.classList.toggle('sel', j === k)); confs.forEach(b => b.disabled = false); };
+    const btns = order.map((oi, k) => h('button', { class: 'opt', type: 'button', onclick: () => elige(k) }, h('span', { class: 'key' }, String(k + 1)), h('span', {}, q.o[oi])));
+    const confs = NIVELES_CONF.map(n => h('button', { class: 'btn alt', type: 'button', disabled: true, onclick: () => cierra(n) }, `${n} %`));
+    card.append(h('div', { class: 'opts' }, btns), h('p', { class: 'label', style: 'margin:12px 0 6px' }, '¿Qué tan seguro estás? Esto envía tu respuesta'), h('div', { class: 'row', style: 'margin-top:0' }, confs),
+      h('small', { style: 'color:var(--muted);display:block;margin-top:8px' }, 'Acierto: 0, +32, +48, +50. Error: 0, −48, −112, −150.'));
+    const cupo = h('div', { class: 'aistat ready' });
+    const pintaCupo = () => { cupo.textContent = `Tokens disponibles: ${this.tokens}`; lineas.forEach((l, j) => { if (l.btn && !l.abierta) l.btn.disabled = done || this.tokens < PRECIO_IA[RIVALS[j].id]; }); };
+    const lineas = RIVALS.map((r, j) => {
+      const res = h('div', { class: 'cresp' }); const l = { res, abierta: false };
+      l.btn = h('button', { class: 'btn alt ccons', type: 'button', onclick: () => {
+        if (done || l.abierta || this.tokens < PRECIO_IA[r.id]) return;
+        l.abierta = true; this.tokens -= PRECIO_IA[r.id]; this.stats[r.id].cons++; l.btn.disabled = true; l.btn.textContent = 'Consultando…'; pintaCupo();
+        setTimeout(() => { if (tok !== this.tok || done) return; l.btn.remove(); l.btn = null; res.textContent = `${corta(planes[j].ans, 60)} · ${planes[j].conf} %`; }, 600);
+      } }, `Consultar · ${PRECIO_IA[r.id]}`);
+      l.el = h('div', { class: 'cline', style: `--ia:${r.color}` }, h('span', { class: 'mono-av' }, r.ini), h('div', { class: 'cinfo' }, h('b', {}, r.name), res), l.btn);
+      return l;
+    });
+    pintaCupo();
+    const panel = h('aside', { class: 'card aipanel', 'aria-label': 'Consejo de IAs' }, h('div', { class: 'aihead' }, h('div', {}, h('b', {}, 'Consejo de IAs'), h('small', {}, 'Cada consulta se paga'))), cupo, ...lineas.map(l => l.el), h('p', { class: 'aviso' }, 'Rivales simulados: no son los modelos reales.'));
+    const left = h('div', { class: 'iaq' }); left.append(card);
+    stage.append(h('div', { class: 'vsia' }, left, panel));
+    const cierra = (n, timeout) => {
+      if (done) return; done = true; Timer.pause(); Game.onKeys(() => {});
+      const right = order.indexOf(0), ok = !timeout && sel === right;
+      btns.forEach(b => b.disabled = true); confs.forEach(b => b.disabled = true);
+      if (sel != null && sel !== right) btns[sel].classList.add('bad'); btns[right].classList.add('ok');
+      lineas.forEach((l, j) => { if (l.btn) l.btn.remove(); l.res.textContent = corta(planes[j].ans, 60); l.res.classList.add(planes[j].ok ? 'ok' : 'bad'); if (planes[j].ok) this.stats[RIVALS[j].id].ok++; });
+      const pts = timeout ? 0 : puntajeConf(n, ok);
+      if (!timeout) { this.cal[n][1]++; if (ok) this.cal[n][0]++; }
+      track(q, ok); Game.score += pts;
+      if (ok) { Game.ok++; Game.streak++; Game.best = Math.max(Game.best, Game.streak); Snd.ok(); } else { Game.bad++; Game.streak = 0; Snd.bad(); }
+      Game.hud(); this.hist.push({ q, ok, n, pts });
+      const fin = this.i >= this.cfg.rounds;
+      feedback(card, { ok, title: timeout ? 'Se acabó el tiempo' : `${ok ? 'Correcto' : 'Incorrecto'} con ${n} % de confianza: ${pts > 0 ? '+' : pts < 0 ? '−' : ''}${Math.abs(pts)} puntos`, ex: q.ex, answer: q.o[0], showAnswer: true, next: fin ? () => this.end() : () => this.next(), nextLabel: fin ? 'Ver resultado' : 'Siguiente ronda' });
+    };
+    Game.onKeys(e => { if (/^[1-4]$/.test(e.key)) elige(+e.key - 1); });
+    Timer.start(total, () => cierra(0, true));
+  },
+  end() {
+    this.tok++; Timer.stop(); Game.onKeys(() => {});
+    const apuestas = Game.score, total = apuestas + this.tokens, n = this.hist.length;
+    const prev = store.get('rec.consejo', null), esRec = total > 0 && (prev == null || total > prev); if (esRec) store.set('rec.consejo', total);
+    Game.score = total; total > 0 ? Snd.win() : Snd.over();
+    const lectura = (p, h2, m2) => m2 < 2 ? 'Muy pocos datos' : h2 / m2 < p / 100 - .15 ? 'Exceso de confianza' : h2 / m2 > p / 100 + .15 ? 'Te subestimas' : 'Bien calibrado';
+    const usados = NIVELES_CONF.filter(p => this.cal[p][1]);
+    const end = $('#end'); end.innerHTML = '';
+    end.append(h('div', { class: 'end' },
+      h('div', { class: 'label' }, 'Consejo de IAs'),
+      h('div', { class: 'big' }, conSigno(total) + ' puntos'),
+      esRec ? h('div', {}, h('span', { class: 'newrec' }, 'Nuevo récord')) : h('div', { class: 'sub' }, prev == null ? 'Sin récord todavía: hay que terminar sobre 0 puntos' : `Récord: ${prev} puntos`),
+      h('div', { class: 'grid3' }, kpi('Aciertos', `${Game.ok}/${n}`), kpi('Por apuestas', conSigno(apuestas)), kpi('Tokens sin gastar', this.tokens)),
+      usados.length ? h('div', { class: 'tablewrap' }, h('table', { class: 't' }, h('thead', {}, h('tr', {}, h('th', {}, 'Dijiste'), h('th', {}, 'Acertaste'), h('th', {}, 'Lectura'))),
+        h('tbody', {}, usados.map(p => { const [a, b] = this.cal[p]; return h('tr', {}, h('td', {}, `${p} %`), h('td', {}, `${a}/${b} (${pct(a / b)})`), h('td', {}, lectura(p, a, b))); })))) : null,
+      h('div', { class: 'tablewrap' }, h('table', { class: 't' }, h('thead', {}, h('tr', {}, h('th', {}, 'Rival'), h('th', {}, 'Acertó'), h('th', {}, 'Consultas'))),
+        h('tbody', {}, RIVALS.map(r => h('tr', {}, h('td', {}, r.name), h('td', {}, `${this.stats[r.id].ok}/${n}`), h('td', {}, this.stats[r.id].cons)))))),
+      reviewBlock(), h('p', { class: 'aviso' }, AVISO_IA), endActions(this.m, this.cfg)));
+    Game.cleanups.forEach(f => f()); Game.cleanups = [];
+    show('end');
+  },
+};
+
 /* =====================================================================
    Motor de gráficos estilo matplotlib (canvas)
    ===================================================================== */
@@ -3288,7 +3698,10 @@ function confirmQuit(btn) {
   if (btn.dataset.armed) {
     delete btn.dataset.armed;
     const id = Game.mode?.id, played = Game.ok + Game.bad > 0;
-    Lab.tok = (Lab.tok || 0) + 1; Group.over = true; VsIA.tok++;
+    Lab.tok = (Lab.tok || 0) + 1; Group.over = true; VsIA.tok++; Caza.tok++; Liga.tok++; Consejo.tok++;
+    if (id === 'caza' && played) return Caza.end();
+    if (id === 'entrena' && played) return Liga.end();
+    if (id === 'consejo' && Consejo.hist?.length) return Consejo.end();
     if (id === 'ia' && VsIA.hist?.length) return VsIA.end(true);
     if (played && ['reloj', 'oraculo', 'orden', 'terminal', 'lab'].includes(id)) return endSolo(id === 'lab' ? [kpi('Figuras', Lab.n)] : []);
     if (played && id === 'grupo') return Group.end();
